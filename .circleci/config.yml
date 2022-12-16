@@ -16,7 +16,7 @@ common-job-envs: &common-job-envs
 jobs:
   build:
     working_directory: ~/repo
-    envs:
+    environment:
       <<: *common-job-envs
     machine:
       image: ubuntu-2004:current
