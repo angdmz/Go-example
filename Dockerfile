@@ -18,5 +18,6 @@ COPY --from=dependencies /go /go
 WORKDIR /build
 COPY . .
 RUN curl -sSL "https://github.com/gotestyourself/gotestsum/releases/download/v1.8.2/gotestsum_1.8.2_linux_amd64.tar.gz" | tar -xz -C /usr/local/bin gotestsum
+RUN go get -t awesomeProject
 
 CMD gotestsum --junitfile /tmp/test-reports/unit-tests.xml
