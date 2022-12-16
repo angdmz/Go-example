@@ -38,9 +38,7 @@ jobs:
             docker-compose up -d tests
       - run:
           name: Store test results
-          command: |
-            docker-compose ps -aq
-            docker cp $(docker-compose ps -aq -- tests):/tmp/test-results /tmp/test-results
+          command: docker cp $(docker-compose ps -aq -- tests):/tmp/test-reports /tmp/test-reports
       - store_test_results:
           path: /tmp/test-reports
 
