@@ -26,3 +26,7 @@ func TestPingRoute(t *testing.T) {
 	assert.Equal(t, pong.Sarasa, "jajs dice poronga")
 	assert.Equal(t, pong.Poronga, 123)
 }
+
+func TestTrue(t *testing.T) {
+	assert.True(t, true)
+}

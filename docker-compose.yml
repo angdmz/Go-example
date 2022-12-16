@@ -8,3 +8,13 @@ services:
       dockerfile: Dockerfile
     container_name: goexample-tests
     command: ["gotestsum", "--junitfile", "/tmp/test-results/unit-tests.xml"]
+  create-gosum:
+    image: example
+    build:
+      context: .
+      target: test
+      dockerfile: Dockerfile
+    container_name: goexample-tests
+    volumes:
+      - ./:/build
+    command: ["go", "mod", "download"]
