@@ -2,34 +2,43 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+executors:
+  small-docker:
+    resource_class: small
+
+common-job-envs: &common-job-envs
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
     working_directory: ~/repo
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: circleci/golang:1.15.8
+    envs:
+      <<: *common-job-envs
+    machine:
+      image: ubuntu-2004:current
+      docker_layer_caching: true
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
           name: Install Dependencies
           command: go mod download
-      - save_cache:
-          key: go-mod-v4-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
+      - run:
+          name: Create test reports directory
+          command: mkdir -p /tmp/test-results
       - run:
           name: Run tests
           command: |
-            mkdir -p /tmp/test-reports
-            gotestsum --junitfile /tmp/test-reports/unit-tests.xml
+            echo "export STEP=\"Run tests\"" >> $BASH_ENV
+            docker-compose run tests
+      - run:
+          name: Store test results
+          command: docker cp $(docker-compose ps -aq -- tests):/tmp/test-results /tmp/test-results
       - store_test_results:
           path: /tmp/test-reports
 
