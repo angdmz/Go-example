@@ -7,4 +7,4 @@ services:
       target: test
       dockerfile: Dockerfile
     container_name: goexample-tests
-    command: ["gotestsum", "--junitfile", "/tmp/test-reports/unit-tests.xml"]
+    command: ["gotestsum", "--junitfile", "/tmp/test-results/unit-tests.xml"]
