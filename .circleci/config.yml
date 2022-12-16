@@ -35,7 +35,7 @@ jobs:
           name: Run tests
           command: |
             echo "export STEP=\"Run tests\"" >> $BASH_ENV
-            docker-compose run tests
+            docker-compose up -d tests
       - run:
           name: Store test results
           command: docker cp $(docker-compose ps -aq -- tests):/tmp/test-results /tmp/test-results
